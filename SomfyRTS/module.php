@@ -127,34 +127,6 @@ class SomfyRTS extends IPSModule
     }
 
     /**
-     * Send data to I/O interface
-     *
-     * 0C1A 00 01 010203 01 03 00000000
-     * ---- -- -- ------ -- -- --------
-     * |    |  |  |      |  |  |======= 8 x zero
-     * |    |  |  |      |  |========== command: STOP(00), UP(01), DOWN(03)
-     * |    |  |  |      |============= unit code 00 to FF
-     * |    |  |  |==================== unit id (000001 to FFFFFF)
-     * |    |  |======================= sequence number (01)
-     * |    |========================== subtype (00 = Somfy RTS(RFY), 01 = RFY-EXT, 03 = ASA)
-     * |=============================== prefix (0C1A)
-     *
-     * @param string $text sequence of unit and command
-     * @return String HTML coded color or empty string
-     */
-    private function SendData(string $text)
-    {
-        $resultPort = true;
-        // Serial Port
-        $simple['DataID'] = self::GUID_SIMPLE_TX;
-        $simple['Buffer'] = self::RTY_PREFIX . $text . self::RTY_SUFFIX;
-        $json = json_encode($simple, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__, $json, 0);
-        $resultPort = @$this->SendDataToParent($json);
-        return $resultPort;
-    }
-
-    /**
      * This function is called by IP-Symcon and processes sent data and, if necessary, forwards it to all child instances.
      *
      *      Response = ACK,
@@ -236,6 +208,34 @@ class SomfyRTS extends IPSModule
                 }
             }
         }
+    }
+
+    /**
+     * Send data to I/O interface
+     *
+     * 0C1A 00 01 010203 01 03 00000000
+     * ---- -- -- ------ -- -- --------
+     * |    |  |  |      |  |  |======= 8 x zero
+     * |    |  |  |      |  |========== command: STOP(00), UP(01), DOWN(03)
+     * |    |  |  |      |============= unit code 00 to FF
+     * |    |  |  |==================== unit id (000001 to FFFFFF)
+     * |    |  |======================= sequence number (01)
+     * |    |========================== subtype (00 = Somfy RTS(RFY), 01 = RFY-EXT, 03 = ASA)
+     * |=============================== prefix (0C1A)
+     *
+     * @param string $text sequence of unit and command
+     * @return String HTML coded color or empty string
+     */
+    private function SendData(string $text)
+    {
+        $resultPort = true;
+        // Serial Port
+        $simple['DataID'] = self::GUID_SIMPLE_TX;
+        $simple['Buffer'] = self::RTY_PREFIX . $text . self::RTY_SUFFIX;
+        $json = json_encode($simple, JSON_UNESCAPED_SLASHES);
+        $this->SendDebug(__FUNCTION__, $json, 0);
+        $resultPort = @$this->SendDataToParent($json);
+        return $resultPort;
     }
 
     /**
