@@ -1,0 +1,197 @@
+<html>
+<head>
+    <style>
+        html,
+        body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #content {
+            position: absolute;
+            margin: 60px 20px 15px 20px;
+            font-size: 14px;
+            height: calc(100% - (60px + 15px));
+            width: calc(100% - (20px + 20px));
+        }
+
+        #content.top {
+            align-content: end;
+            text-align: center;
+        }
+        #content.bottom {
+            align-content: start;
+            text-align: center;
+        }
+        #content.left {
+            align-content: center;
+            text-align: right;
+        }
+        #content.right {
+            align-content: center;
+            text-align: left;
+        }
+
+        #control {
+            position: fixed;
+            display: grid;
+            z-index: 1000;
+        }
+
+        #control.top {
+            top: 60px;
+            left: 20px;
+            width: calc(100% - (20px + 20px));;
+            grid-template-columns: auto auto auto;
+            justify-content: space-around;
+        }
+
+        #control.bottom {
+            bottom: 20px;
+            left: 20px;
+            width: calc(100% - (20px + 20px));;
+            grid-template-columns: auto auto auto;
+            justify-content: space-around;
+        }
+
+        #control.left {
+            top: 60px;
+            left: calc(20px + 5vH);
+            height: calc(100% - (60px + 15px));
+            grid-template-rows: auto auto auto;
+            align-items: center;
+        }
+
+        #control.right {
+            top: 60px;
+            right: calc(20px + 5vH);
+            height: calc(100% - (60px + 15px));
+            grid-template-rows: auto auto auto;
+            align-items: center;
+        }
+
+        #awning,
+        #valance {
+            display: none;
+        }
+
+        #awning .none,
+        #awning .half,
+        #awning .full {
+            display: none;
+        }
+
+        #valance .none,
+        #valance .half,
+        #valance .full {
+            display: none;
+        }
+
+        .button {
+            cursor: pointer;
+            height: 15vH;
+            text-align: center;
+            filter: brightness(90%);
+        }
+
+        .button:hover {
+            filter: brightness(100%);
+        }
+    </style>
+    <script src="/icons.js" crossorigin="anonymous"></script>
+    <script>
+        // This is where the data is processed by the module.
+        function handleMessage(data) {
+            const decodedData = JSON.parse(data);
+            for (const parameter in decodedData) {
+                console.log(parameter + ': ' + decodedData[parameter]);
+                switch (parameter) {
+                    case 'status':
+                        var body = document.querySelector('body');
+                        if (decodedData[parameter] != '') {
+                            body.style.background = decodedData[parameter];
+                        } else {
+                            body.style.background = "var(--card-color)";
+                        }
+                        break;
+                    case 'type':
+                        var awning = document.getElementById('awning');
+                        var valance = document.getElementById('valance');
+                        awning.style.display = decodedData[parameter] == 'awning' ? 'block' : 'none';
+                        valance.style.display = decodedData[parameter] == 'valance' ? 'block' : 'none';
+                        break;
+                    case 'align':
+                        var content = document.getElementById('content');
+                        content.className = decodedData[parameter];
+                        var control = document.getElementById('control');
+                        control.className = decodedData[parameter];
+                        // manipulate buttons
+                        var leri = false;
+                        if((decodedData[parameter] == 'left') || (decodedData[parameter] == 'right')) {
+                            leri = true;
+                        }
+                        var elem = '#control .in_out';
+                        document.querySelectorAll(elem).forEach(el => {
+                            el.style.display = leri ? 'none' : 'block';
+                        });
+                        var elem = '#control .up_down';
+                        document.querySelectorAll(elem).forEach(el => {
+                            el.style.display = leri ? 'block' : 'none';
+                        });
+                        break;
+                    case 'remote':
+                        var elem = '#awning .none, #valance .none';
+                        document.querySelectorAll(elem).forEach(el => {
+                            el.style.display = decodedData[parameter] == 'none' ? 'block' : 'none';
+                        });
+                        var elem = '#awning .half, #valance .half';
+                        document.querySelectorAll(elem).forEach(el => {
+                            el.style.display = decodedData[parameter] == 'half' ? 'block' : 'none';
+                        });
+                        var elem = '#awning .full, #valance .full';
+                        document.querySelectorAll(elem).forEach(el => {
+                            el.style.display = decodedData[parameter] == 'full' ? 'block' : 'none';
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="control">
+        <i class="fa-light fa-circle-caret-up button up_down" title="Up" onclick="requestAction('Remote',1)"></i>
+        <i class="fa-light fa-circle-caret-left button in_out" title="In" onclick="requestAction('Remote',1)"></i>
+        <i class="fa-light fa-circle-stop button my_stop" title="My/Stop" onclick="requestAction('Remote',0)"></i>
+        <i class="fa-light fa-circle-caret-down button up_down" title="Down" onclick="requestAction('Remote',3)"></i>
+        <i class="fa-light fa-circle-caret-right button in_out" title="Out" onclick="requestAction('Remote',3)"></i>
+    </div>
+    <div id="content">
+        <div id="awning">
+            <svg xmlns="http://www.w3.org/2000/svg" width="70%" height="70%" viewBox="0 0 360 360" fill="var(--content-color, white)" >
+                <rect class="none" width="330" height="6.5" x="16.5" y="44" ry="3.5"/>
+                <rect class="none" width="350" height="7.5" x="6.5" y="56" ry="3.8"/>
+                <path class="none" d="m 349.791,70 c 1.491,10 4.473,30 -2.982,36 C 324.921,110.894 316.545,94.915 293.582,94.55 270.622,95.2 257.4,105.936 234.985,106 215.547,105.847 202.557,95.55 179.147,95 159.765,94.9 138.071,107 118.688,106 103.778,105 88.421,94.7 67.399,94.7 44.511,94.75 32.211,107 15.81,106 8.355,98 11.337,79 12.828,69 20.283,70 342.336,68 349.791,70 Z"/>
+                <path class="half" d="m 314.36,44.284 c 6.815,28.187 13.886,55.92 19.866,85.595 -0.746,7.507 -23.252,4.491 -29.595,2.029 -1.076,-4.745 -9.511,-50.719 -16.335,-87.624 h -20.808 c 5.387,35.343 13.065,89.315 12.1,89.652 -8.736,-1.335 -20.478,2.684 -27.32,-2.029 -2.564,-29.667 -5.332,-58.971 -8.465,-87.624 h -24.551 c 2.682,35.346 6.664,89.315 5.697,89.652 h -27.319 c -1.181,-28.559 -0.778,-59.942 -1.309,-89.652 h -22.624 c -0.145,38.58 -0.648,87.521 -2.246,89.652 -6.451,0 -27.104,1.171 -22.766,0 -2.11,-29.338 -0.784,-59.081 -0.103,-89.652 h -25.301 c -2.941,39.138 -6.467,88.808 -6.467,89.652 -11.2,0.378 -21.888,-1.141 -29.595,-2.029 -0.59,-3.599 7.952,-50.576 14.472,-87.624 H 78.719 L 64.454,133.937 C 55.657,136.068 30.306,131.908 30.306,131.908 36.724,101.831 43.907,73.121 51.022,44.284 H 39.079 c -10.31,28.574 -15.916,56.801 -23.57,97.769 -0.38,8.576 0.575,13.832 7.967,14.203 22.121,-0.015 279.006,0.082 318.717,-2.031 5.726,-0.957 6.397,-1.41 6.83,-2.029 -0.057,-17.653 -11.438,-68.598 -21.655,-107.912 z"/>
+                <rect class="half" width="350" height="7.5" x="6.5" y="162" ry="3.8"/>
+                <path class="half" d="m 349.791,176 c 1.491,10 4.473,30 -2.982,36 -21.888,4.894 -30.264,-11.085 -53.227,-11.45 -22.96,0.65 -36.182,11.386 -58.597,11.45 -19.438,-0.153 -32.428,-10.45 -55.838,-11 -19.382,-0.1 -41.076,12 -60.459,11 -14.91,-1 -30.267,-11.3 -51.289,-11.3 -22.888,0.05 -35.188,12.3 -51.589,11.3 -7.455,-8 -4.473,-27 -2.982,-37 7.455,1 329.508,-1 336.963,1 z"/>
+                <path class="full" d="m 314.36,44.285714 c 6.815,52.349039 15.21298,126.855846 21.19298,181.968406 -0.746,13.94204 -24.13665,9.22536 -30.47965,4.65292 C 303.99733,222.0946 295.12,112.82587 288.296,44.285714 h -20.808 c 5.387,65.639196 16.16128,188.434876 15.19628,189.060756 -8.736,-2.47937 -27.55521,7.63869 -34.39721,-1.11432 -2.564,-55.0977 -1.35107,-134.733797 -4.48407,-187.948293 h -24.551 c 2.682,65.644773 8.4333,190.204183 7.4663,190.830053 l -30.41528,0.44233 c -1.181,-53.03992 0.54898,-136.094821 0.018,-191.272383 h -22.624 c -0.145,71.650973 -1.97498,186.430033 -3.57298,190.387733 -6.451,0 -30.6426,0.84781 -26.3046,-1.32698 -2.11,-54.48668 4.08158,-132.28414 4.76258,-189.060753 h -25.301 c -2.941,72.687293 -9.12095,188.820253 -9.12095,190.387733 -11.2,0.70203 -25.868936,0.97721 -33.575936,-0.67199 C 79.994114,227.31552 95.171,113.08773 101.691,44.282 H 78.719 L 61.800046,233.34833 c -8.797,3.9577 -33.705675,0.65499 -33.705675,0.65499 C 34.512371,178.14416 43.907,97.841936 51.022,44.285714 H 39.079 C 28.769,97.353491 23.163,149.77682 15.509,225.86279 c -0.38,15.92739 0.575,25.68886 7.967,26.37789 22.121,-0.0279 279.006,0.15229 318.717,-3.77199 5.726,-1.77734 6.397,-2.61866 6.83,-3.76827 -0.057,-32.78524 -11.438,-127.40055 -21.655,-200.414706 z"/>
+                <rect class="full" width="350" height="7.5" x="6.5" y="262" ry="3.8"/>
+                <path class="full" d="m 349.791,276 c 1.491,10 4.473,30 -2.982,36 -21.888,4.894 -30.264,-11.085 -53.227,-11.45 -22.96,0.65 -36.182,11.386 -58.597,11.45 -19.438,-0.153 -32.428,-10.45 -55.838,-11 -19.382,-0.1 -41.076,12 -60.459,11 -14.91,-1 -30.267,-11.3 -51.289,-11.3 -22.888,0.05 -35.188,12.3 -51.589,11.3 -7.455,-8 -4.473,-27 -2.982,-37 7.455,1 329.508,-1 336.963,1 z"/>
+            </svg>
+        </div>
+        <div id="valance">
+            <svg xmlns="http://www.w3.org/2000/svg" width="70%" height="70%" viewBox="0 0 360 360" fill="var(--content-color, white)" >
+                <rect width="330.00" height="6.5" x="16.50" y="44" ry="3.5"/>
+                <rect width="350.00" height="7.5" x="6.50" y="56" ry="3.8"/>
+                <path class="none" d="m 349.791,70 c 1.491,10 4.473,30 -2.982,36 C 324.921,110.894 316.545,94.915 293.582,94.55 270.622,95.2 257.4,105.936 234.985,106 215.547,105.847 202.557,95.55 179.147,95 159.765,94.9 138.071,107 118.688,106 103.778,105 88.421,94.7 67.399,94.7 44.511,94.75 32.211,107 15.81,106 8.355,98 11.337,79 12.828,69 20.283,70 342.336,68 349.791,70 Z"/>
+                <path class="half" d="m 350.32,70.47 c 1.49,10 4.47,129.32 -2.98,135.32 -21.89,4.89 -30.26,-11.09 -53.23,-11.45 -22.96,0.65 -36.18,11.39 -58.6,11.45 -19.44,-0.15 -32.43,-10.45 -55.84,-11 -19.38,-0.1 -41.08,12 -60.46,11 -14.91,-1 -30.27,-11.3 -51.29,-11.3 -22.89,0.05 -35.19,12.3 -51.59,11.3 -7.45,-8 -5.13,-126.65 -3.64,-136.65 7.45,1 330.17,-0.67 337.62,1.33 z"/>
+                <path class="full" d="m 350.59,70.813 c 1.491,10 3.483,243.492 -3.972,249.492 -21.889,4.894 -30.265,-11.085 -53.227,-11.45 -22.96,0.65 -36.183,11.386 -58.597,11.45 -19.439,-0.153 -32.429,-10.45 -55.838,-11 -19.383,-0.1 -41.076,12 -60.459,11 -14.91,-1 -30.267,-11.3 -51.289,-11.3 -22.888,0.05 -35.188,12.3 -51.589,11.3 -7.455,-8 -5.133,-240.162 -3.642,-250.162 7.455,1 331.158,-1.33 338.613,0.67 z"/>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+    "translations": {
+        "de": {
+            "This module allows you to control Somfy RTS and ASA motors using an RFXtrx433E, RFXtrx433XL, RFX433XL, RFX-433, or RFX-433EMC.": "Mit diesem Modul können Somfy RTS- sowie ASA-Motoren über einen RFXtrx433E, RFXtrx433XL, RFX433XL, RFX-433 oder RFX-433EMC angesteuert werden.",
+            "Receiving unit ...": "Empfangseinheit ...",
+            "Type:": "Typ:",
+            "Unit code:": "Gerätecode:",
+            "Unit ID:": "Geräte-ID:",
+            "Visualisation ...": "Visualisierung ...",
+            "Display type:": "Darstellungsart:",
+            "Main awning": "Markise",
+            "Drop-down valance": "Volant",
+            "Position of the remote control buttons:": "Position der Fernbedienungstasten:",
+            "Top": "Oben",
+            "Left": "Links",
+            "Bottom": "Unten",
+            "Right": "Rechts",
+            "Status variable (Retracted/Extended):": "Statusvariable (Eingefahren/Ausgefahren):",
+            "Tile background color (Retracted):": "Kachelhintergrundfarbe (Eingefahren):",
+            "Tile background color (Extended):": "Kachelhintergrundfarbe (Ausgefahren):",
+            "Show navigation bar (Prev, Back, Next)?": "Navigationsleiste anzeigen (Vor, Zurück, Weiter)?",
+            "Advanced settings ...": "Erweiterte Einstellungen ...",
+            "Additionally create a normal switch variable (e.g. for WebFront)?": "Zusätzlich noch eine normale Schaltervariable anlegen (z.B. für Webfront)?",
+            "My/Stop": "My/Stop",
+            "Up/In": "Hoch/Rein",
+            "Down/Out": "Runter/Raus",
+            "Up": "Hoch",
+            "Down": "Runter",
+            "In": "Rein",
+            "Out": "Raus",
+            "Remote Control": "Fernbedienung",
+            "Source code, donation and licence ...": "Quellcode, Spende und Lizenz ...",
+            "The software is free of charge for non-commercial use, I would appreciate a donation if you like the module.": "Die Software ist für die nicht kommerzielle Nutzung kostenlos, über eine Spende bei Gefallen des Moduls würde ich mich sehr freuen."
+        }
+    }
+}
