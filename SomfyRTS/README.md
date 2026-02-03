@@ -4,7 +4,7 @@
 [![Product](https://img.shields.io/badge/Symcon%20Version-8.1-blue.svg?style=flat-square)](https://www.symcon.de/produkt/)
 [![Version](https://img.shields.io/badge/Modul%20Version-2.0.20260201-orange.svg?style=flat-square)](https://github.com/Wilkware/Rfx2COM)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-[![Actions](https://img.shields.io/github/actions/workflow/status/wilkware/Rfx2COM/style.yml?branch=main&label=CheckStyle&style=flat-square)](https://github.com/Wilkware/Rfx2COM/actions)
+[![Actions](https://img.shields.io/github/actions/workflow/status/wilkware/Rfx2COM/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/Wilkware/Rfx2COM/actions)
 
 Mit diesem Modul können Somfy RTS- sowie ASA-Motoren über einen RFXtrx433E, RFXtrx433XL, RFX433XL, RFX-433 oder RFX-433EMC angesteuert werden.
 
