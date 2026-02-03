@@ -8,42 +8,69 @@ require_once __DIR__ . '/../libs/_traits.php';
 /**
  * CLASS Somfy RTS
  */
-class SomfyRTS extends IPSModule
+class SomfyRTS extends IPSModuleStrict
 {
+    // Helper Traits
     use DebugHelper;
-    use ProfileHelper;
+    use FormatHelper;
+    use TemplateHelper;
     use VariableHelper;
 
-    // Min IPS Object ID
+    /**
+     * @var int Minimum valid IPS Object ID for variables
+     */
     private const IPS_MIN_ID = 10000;
 
     // Data flow IDs
-    private const GUID_SIMPLE_IO = '{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}';  // I/O instance
-    private const GUID_SIMPLE_RX = '{018EF6B5-AB94-40C6-AA53-46943E824ACF}';  // from port to module
+    /**
+     * @var string GUID of the Simple I/O instance
+     */
+    private const GUID_SIMPLE_IO = '{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}';
+    /**
+     * @var string GUID of the Simple TX instance
+     */
     private const GUID_SIMPLE_TX = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';  // from module to port
+    // private const GUID_SIMPLE_RX = '{018EF6B5-AB94-40C6-AA53-46943E824ACF}';  // from port to module
 
-    // Profiles
-    private const PROFILE_TYPES = [
-        0 => 'R2C.Awning',
-        1 => 'R2C.Valance',
+    /**
+     * @var array<string,mixed> Presentation (Enumeration) for Awning
+     */
+    private const RTY_PRESENTATION_AWNING = [
+        'PRESENTATION' => VARIABLE_PRESENTATION_ENUMERATION,
+        'OPTIONS'      => '[{"Caption":"My/Stop","Color":-1,"IconActive":true,"IconValue":"square-m","Value":0},{"Caption":"In","Color":-1,"IconActive":true,"IconValue":"square-arrow-left","Value":1},{"Caption":"Out","Color":-1,"IconActive":true,"IconValue":"square-arrow-right","Value":3}]',
+        'LAYOUT'       => 0,
+        'ICON'         => '',
+        'DISPLAY'      => 1,
     ];
 
-    // RTXCOM
+    /**
+     * @var array<string,mixed> Presentation (Enumeration) for Valance
+     */
+    private const RTY_PRESENTATION_VALANCE = [
+        'PRESENTATION' => VARIABLE_PRESENTATION_ENUMERATION,
+        'OPTIONS'      => '[{"Caption":"My/Stop","Color":-1,"IconActive":true,"IconValue":"square-m","Value":0},{"Caption":"Up","Color":-1,"IconActive":true,"IconValue":"square-arrow-up","Value":1},{"Caption":"Down","Color":-1,"IconActive":true,"IconValue":"square-arrow-down","Value":3}]',
+        'LAYOUT'       => 0,
+        'ICON'         => '',
+        'DISPLAY'      => 1,
+    ];
+
+    /**
+     * @var string Prefix for Somfy RTS messages
+     */
     private const RTY_PREFIX = "\x0C\x1A";
-    private const RTY_SUFFIX = "\x00\x00\x00\x00";
 
-    // Unit Type
-    private const UNIT_TYPE = [
-        0 => '00',
-        3 => '03',
-    ];
+    /**
+     * @var string Suffix for Somfy RTS messages
+     */
+    private const RTY_SUFFIX = "\x00\x00\x00\x00";
 
     /**
      * In contrast to Construct, this function is called only once when creating the instance and starting IP-Symcon.
      * Therefore, status variables and module properties which the module requires permanently should be created here.
      *
+     * @return void
      */
-    public function Create()
+    public function Create(): void
     {
         //Never delete this line!
         parent::Create();
@@ -59,8 +86,10 @@ class SomfyRTS extends IPSModule
         $this->RegisterPropertyInteger('VisuInColor', -1);
         $this->RegisterPropertyInteger('VisuOutColor', -1);
 
-        // I/O Instance
-        $this->RequireParent(self::GUID_SIMPLE_IO);
+        if ((float) IPS_GetKernelVersion() < 8.2) {
+            // I/O Instance
+            $this->RequireParent(self::GUID_SIMPLE_IO);
+        }
 
         // Set visualization type to 1, as we want to offer HTML
         $this->SetVisualizationType(1);
@@ -69,8 +98,10 @@ class SomfyRTS extends IPSModule
     /**
      * This function is called when deleting the instance during operation and when updating via "Module Control".
      * The function is not called when exiting IP-Symcon.
+     *
+     * @return void
      */
-    public function Destroy()
+    public function Destroy(): void
     {
         //Never delete this line!
         parent::Destroy();
@@ -78,8 +109,10 @@ class SomfyRTS extends IPSModule
 
     /**
      * Is executed when "Apply" is pressed on the configuration page and immediately after the instance has been created.
+     *
+     * @return void
      */
-    public function ApplyChanges()
+    public function ApplyChanges(): void
     {
         //Never delete this line!
         parent::ApplyChanges();
@@ -95,26 +128,14 @@ class SomfyRTS extends IPSModule
             }
         }
 
-        // Profile "R2C.Awning"
-        $association = [
-            [0, 'My/Stop', 'square-m', -1],
-            [1, 'In', 'square-arrow-left', -1],
-            [3, 'Out', 'square-arrow-right', -1],
-        ];
-        $this->RegisterProfileInteger(self::PROFILE_TYPES[0], '', '', '', 0, 0, 0, $association);
-        // Profile "R2C.Valance"
-        $association = [
-            [0, 'My/Stop', 'square-m', -1],
-            [1, 'Up', 'square-arrow-up', -1],
-            [3, 'Down', 'square-arrow-down', -1],
-        ];
-        $this->RegisterProfileInteger(self::PROFILE_TYPES[1], '', '', '', 0, 0, 0, $association);
-
         // Setup infos
         $type = $this->ReadPropertyInteger('VisuType');
+        $present = ($type == 0) ? self::RTY_PRESENTATION_AWNING : self::RTY_PRESENTATION_VALANCE;
+        $present = $this->TranslateCaptions($present);
+        $this->LogDebug(__FUNCTION__, $present);
 
         // Maintain variables
-        $this->MaintainVariable('Remote', $this->Translate('Remote Control'), 1, self::PROFILE_TYPES[$type], 1, true);
+        $this->MaintainVariable('Remote', $this->Translate('Remote Control'), 1, $present, 1, true);
         $this->MaintainAction('Remote', true);
 
         $variable = $this->ReadPropertyInteger('VisuVariable');
@@ -127,29 +148,16 @@ class SomfyRTS extends IPSModule
     }
 
     /**
-     * This function is called by IP-Symcon and processes sent data and, if necessary, forwards it to all child instances.
-     *
-     *      Response = ACK,
-     *          Raw data = 0402010100
-     *
-     * @param string $json Data package in JSON format
-     */
-    public function ReceiveData($json)
-    {
-        $data = json_decode($json);
-        $this->SendDebug(__FUNCTION__, utf8_decode($data->Buffer), 0);
-    }
-
-    /**
      * Is called when, for example, a button is clicked in the visualization.
      *
-     *  @param string $ident Ident of the variable
-     *  @param string $value The value to be set
+     * @param string $ident Ident of the variable
+     * @param mixed $value The value to be set
+     * @return void
      */
-    public function RequestAction($ident, $value)
+    public function RequestAction(string $ident, mixed $value): void
     {
         // Debug output
-        $this->SendDebug(__FUNCTION__, $ident . ' => ' . $value);
+        $this->LogDebug(__FUNCTION__, $ident . ' => ' . $value);
         switch ($ident) {
             case 'Remote':
                 $this->HandleCommand($value);
@@ -160,11 +168,28 @@ class SomfyRTS extends IPSModule
     }
 
     /**
+     * This function is called by IP-Symcon and processes sent data and, if necessary, forwards it to
+     * all child instances. Data can be sent using the SendDataToChildren function.
+     *
+     * Response = ACK,
+     *  Raw data = 0402010100
+     *
+     * @param string $json Data package in JSON format
+     * @return string Optional response to the parent instance
+     */
+    public function ReceiveData(string $json): string
+    {
+        $data = json_decode($json);
+        $this->LogDebug(__FUNCTION__, utf8_decode($data->Buffer));
+        return '';
+    }
+
+    /**
      * If the HTML-SDK is to be used, this function must be overwritten in order to return the HTML content.
      *
-     * @return String Initial display of a representation via HTML SDK
+     * @return string Initial display of a representation via HTML SDK
      */
-    public function GetVisualizationTile()
+    public function GetVisualizationTile(): string
     {
         // Add a script to set the values when loading, analogous to changes at runtime
         // Although the return from GetFullUpdateMessage is already JSON-encoded, json_encode is still executed a second time
@@ -186,15 +211,16 @@ class SomfyRTS extends IPSModule
      * data[2] = old value
      * data[3] = timestamp.
      *
-     * @param mixed $timestamp Continuous counter timestamp
-     * @param mixed $sender Sender ID
-     * @param mixed $message ID of the message
-     * @param mixed $data Data of the message
+     * @param int   $timestamp Continuous counter timestamp
+     * @param int   $sender    Sender ID
+     * @param int   $message   ID of the message
+     * @param array{0:mixed,1:bool,2:mixed,3:int} $data Data of the message
+     * @return void
      */
-    public function MessageSink($timestamp, $sender, $message, $data)
+    public function MessageSink(int $timestamp, int $sender, int $message, array $data): void
     {
         // Debug
-        // $this->SendDebug(__FUNCTION__, 'SenderId: ' . $sender . ' Data: ' . $this->DebugPrint($data), 0);
+        // $this->LogDebug(__FUNCTION__, 'SenderId: ' . $sender . ' Data: ' . $this->DebugPrint($data), 0);
         // React to updates
         if ($message == VM_UPDATE) {
             // only if values changed!
@@ -224,26 +250,25 @@ class SomfyRTS extends IPSModule
      * |=============================== prefix (0C1A)
      *
      * @param string $text sequence of unit and command
-     * @return String HTML coded color or empty string
+     * @return string Result of the parent call
      */
-    private function SendData(string $text)
+    private function SendData(string $text): string
     {
-        $resultPort = true;
         // Serial Port
         $simple['DataID'] = self::GUID_SIMPLE_TX;
-        $simple['Buffer'] = self::RTY_PREFIX . $text . self::RTY_SUFFIX;
+        $simple['Buffer'] = bin2hex(self::RTY_PREFIX . $text . self::RTY_SUFFIX);
         $json = json_encode($simple, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__, $json, 0);
-        $resultPort = @$this->SendDataToParent($json);
-        return $resultPort;
+        $this->LogDebug(__FUNCTION__, $json);
+        return @$this->SendDataToParent($json);
     }
 
     /**
      * Transform the passed command to a full sequence and send the data
      *
      * @param int $command Command to execute
+     * @return void
      */
-    private function HandleCommand(int $command)
+    private function HandleCommand(int $command): void
     {
         $type = $this->ReadPropertyInteger('UnitType');
         $id = $this->ReadPropertyString('UnitID');
@@ -260,7 +285,7 @@ class SomfyRTS extends IPSModule
         // $command → chr() with leading zero
         $output .= chr($command);
         // output as hex string for checking
-        $this->SendDebug(__FUNCTION__, bin2hex($output), 0);
+        $this->LogDebug(__FUNCTION__, bin2hex($output));
         // send data
         $this->SendData($output);
         // set status variable
@@ -270,15 +295,16 @@ class SomfyRTS extends IPSModule
     /**
      * Generate a message that updates all elements in the HTML display.
      *
-     * @return String JSON encoded message information
+     * @return string JSON encoded message information
      */
-    private function GetFullUpdateMessage()
+    private function GetFullUpdateMessage(): string
     {
         // dataset variable
         $remote = match ($this->GetValue('Remote')) {
-            0 => 'half',
-            1 => 'none',
-            3 => 'full',
+            0       => 'half',
+            1       => 'none',
+            3       => 'full',
+            default => 'unknown', // handle all other cases
         };
         $status = 'in';
         $vid = $this->ReadPropertyInteger('VisuVariable');
@@ -299,22 +325,7 @@ class SomfyRTS extends IPSModule
             'align'     => ($position),
             'remote'    => ($remote),
         ];
-        //$this->SendDebug(__FUNCTION__, $result, 0);
+        //$this->LogDebug(__FUNCTION__, $result);
         return json_encode($result);
-    }
-
-    /**
-     * Get HTML rgb formated color.
-     *
-     * @param int $color Color value or -1 for transparency
-     * @return String HTML coded color or empty string
-     */
-    private function GetColorFormatted(int $color)
-    {
-        if ($color != '-1') {
-            return '#' . sprintf('%06X', $color);
-        } else {
-            return '';
-        }
     }
 }

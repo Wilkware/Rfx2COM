@@ -4,9 +4,9 @@
     "author": "Wilkware (@Pitti)",
     "url": "https://wilkware.de",
     "compatibility": {
-        "version": "7.0"
+        "version": "8.1"
     },
-    "version": "1.0",
-    "build": 20250518,
-    "date": 1747569600
+    "version": "2.0",
+    "build": 20260201,
+    "date": 1769947200
 }

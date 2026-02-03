@@ -1,8 +1,8 @@
 # SomfyRTS
 
 [![Version](https://img.shields.io/badge/Symcon-PHP--Modul-red.svg?style=flat-square)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-[![Product](https://img.shields.io/badge/Symcon%20Version-7.0-blue.svg?style=flat-square)](https://www.symcon.de/produkt/)
-[![Version](https://img.shields.io/badge/Modul%20Version-1.0.20250518-orange.svg?style=flat-square)](https://github.com/Wilkware/Rfx2COM)
+[![Product](https://img.shields.io/badge/Symcon%20Version-8.1-blue.svg?style=flat-square)](https://www.symcon.de/produkt/)
+[![Version](https://img.shields.io/badge/Modul%20Version-2.0.20260201-orange.svg?style=flat-square)](https://github.com/Wilkware/Rfx2COM)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![Actions](https://img.shields.io/github/actions/workflow/status/wilkware/Rfx2COM/style.yml?branch=main&label=CheckStyle&style=flat-square)](https://github.com/Wilkware/Rfx2COM/actions)
 
@@ -23,7 +23,6 @@ Mit diesem Modul können Somfy RTS- sowie ASA-Motoren über einen RFXtrx433E, RF
 
 Das Modul sendet entsprechende Befehlssequenzen zur Steuerung von mit Somfy-Antrieben ausgestatteten Markisen und Volants.
 
-
 Was macht bzw. was kann das Modul?
 
 - Unterstützung von RTS und ASA Motoren
@@ -33,7 +32,7 @@ Was macht bzw. was kann das Modul?
 
 ### 2. Voraussetzungen
 
-* IP-Symcon ab Version 7.0
+* IP-Symcon ab Version 8.1
 
 ### 3. Installation
 
@@ -83,13 +82,6 @@ Name                        | Typ       | Beschreibung
 --------------------------- | --------- | ----------------
 Fernbedienung               | Integer   | Kommando das (zuletzt) gesendet wurde bzw. gesendet werden soll.
 
-Folgendes Profil wird angelegt:
-
-Name                 | Typ       | Beschreibung
--------------------- | --------- | ----------------
-R2C.Awning           | Integer   | My/Stop, Rein oder Raus (0, 1, 3)
-R2C.Valance          | Integer   | My/Stop, Hoch oder Runter (0, 1, 3)
-
 ### 6. Visualisierung
 
 Man kann direkt das Modul in die Tile Visu verlinken. Die Darstellung der dadurch entstehenden Kachel kann über die  
@@ -101,6 +93,17 @@ Man könnte aber auch nur die Statusvariablen in die Visualisierung verlinken.
 Das Modul stellt keine direkten Funktionsaufrufe zur Verfügung.
 
 ### 8. Versionshistorie
+
+v2.0.20260201
+
+* _NEU_: Umstellung von Profilen auf Darstellungen
+* _NEU_: Modulversion wird in Quellcodesektion angezeigt
+* _NEU_: Projektumstrukturierung hin zu einer globalen CI/CD-Pipeline
+* _NEU_: Umstellung auf IPSModuleStrict
+* _NEU_: Kompatibilität auf IPS 8.1 hoch gesetzt
+* _NEU_: Kompatibilität für IPS 8.2/9.0 vorbereitet
+* _FIX_: Datenfluss angepasst
+* _FIX_: Bibliotheksfunktionen angeglichen
 
 v1.0.20250518
 

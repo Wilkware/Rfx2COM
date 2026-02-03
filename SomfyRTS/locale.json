@@ -2,11 +2,11 @@
     "translations": {
         "de": {
             "This module allows you to control Somfy RTS and ASA motors using an RFXtrx433E, RFXtrx433XL, RFX433XL, RFX-433, or RFX-433EMC.": "Mit diesem Modul können Somfy RTS- sowie ASA-Motoren über einen RFXtrx433E, RFXtrx433XL, RFX433XL, RFX-433 oder RFX-433EMC angesteuert werden.",
-            "Receiving unit ...": "Empfangseinheit ...",
+            "📡 Receiving unit ...": "📡 Empfangseinheit ...",
             "Type:": "Typ:",
             "Unit code:": "Gerätecode:",
             "Unit ID:": "Geräte-ID:",
-            "Visualisation ...": "Visualisierung ...",
+            "✨ Visualisation ...": "✨ Visualisierung ...",
             "Display type:": "Darstellungsart:",
             "Main awning": "Markise",
             "Drop-down valance": "Volant",
@@ -29,7 +29,7 @@
             "In": "Rein",
             "Out": "Raus",
             "Remote Control": "Fernbedienung",
-            "Source code, donation and licence ...": "Quellcode, Spende und Lizenz ...",
+            "🎗️ Source code, donation and licence ...": "🎗️ Quellcode, Spende und Lizenz ...",
             "The software is free of charge for non-commercial use, I would appreciate a donation if you like the module.": "Die Software ist für die nicht kommerzielle Nutzung kostenlos, über eine Spende bei Gefallen des Moduls würde ich mich sehr freuen."
         }
     }
