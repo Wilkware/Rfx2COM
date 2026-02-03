@@ -108,6 +108,29 @@ class SomfyRTS extends IPSModuleStrict
     }
 
     /**
+     * The content can be overwritten in order to transfer a self-created configuration page.
+     * This way, content can be generated dynamically.
+     * In this case, the "form.json" on the file system is completely ignored.
+     *
+     * @return string Content of the configuration page.
+     */
+    public function GetConfigurationForm(): string
+    {
+        // Get Form
+        $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+
+        // Extract Version
+        $ins = IPS_GetInstance($this->InstanceID);
+        $mod = IPS_GetModule($ins['ModuleInfo']['ModuleID']);
+        $lib = IPS_GetLibrary($mod['LibraryID']);
+        $form['actions'][1]['items'][2]['caption'] = sprintf('v%s.%d', $lib['Version'], $lib['Build']);
+
+        // Debug output
+        // $this->LogDebug(__FUNCTION__, $form);
+        return json_encode($form);
+    }
+
+    /**
      * Is executed when "Apply" is pressed on the configuration page and immediately after the instance has been created.
      *
      * @return void
