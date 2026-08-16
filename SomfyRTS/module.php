@@ -2,38 +2,52 @@
 
 declare(strict_types=1);
 
-// General functions
+/** Generell funktions */
 require_once __DIR__ . '/../libs/_traits.php';
+
+/** Namespaced traits */
+use Wilkware\Rfx2COM\DebugHelper;
+use Wilkware\Rfx2COM\FormatHelper;
+use Wilkware\Rfx2COM\VariableHelper;
 
 /**
  * CLASS Somfy RTS
  */
 class SomfyRTS extends IPSModuleStrict
 {
-    // Helper Traits
+    // -------------------------------------------------------------------------
+    // Traits
+    // -------------------------------------------------------------------------
+
     use DebugHelper;
     use FormatHelper;
-    use TemplateHelper;
     use VariableHelper;
 
-    /**
-     * @var int Minimum valid IPS Object ID for variables
-     */
+    // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+
+    /** @var int Minimum valid IPS Object ID for variables */
     private const IPS_MIN_ID = 10000;
 
-    // Data flow IDs
-    /**
-     * @var string GUID of the Simple I/O instance
-     */
+    /** @var string GUID of the Simple I/O instance */
     private const GUID_SIMPLE_IO = '{6DC3D946-0D31-450F-A8C6-C42DB8D7D4F1}';
-    /**
-     * @var string GUID of the Simple TX instance
-     */
-    private const GUID_SIMPLE_TX = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';  // from module to port
-    // private const GUID_SIMPLE_RX = '{018EF6B5-AB94-40C6-AA53-46943E824ACF}';  // from port to module
+
+    /** @var string GUID of the Simple TX instance */
+    private const GUID_SIMPLE_TX = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
+
+    /** @var string Prefix for Somfy RTS messages */
+    private const RTY_PREFIX = "\x0C\x1A";
+
+    /** @var string Suffix for Somfy RTS messages */
+    private const RTY_SUFFIX = "\x00\x00\x00\x00";
+
+    // -------------------------------------------------------------------------
+    // Presentations
+    // -------------------------------------------------------------------------
 
     /**
-     * @var array<string,mixed> Presentation (Enumeration) for Awning
+     * @var array<string,mixed> Awning Presentation (Enumeration)
      */
     private const RTY_PRESENTATION_AWNING = [
         'PRESENTATION' => VARIABLE_PRESENTATION_ENUMERATION,
@@ -44,7 +58,7 @@ class SomfyRTS extends IPSModuleStrict
     ];
 
     /**
-     * @var array<string,mixed> Presentation (Enumeration) for Valance
+     * @var array<string,mixed> Valance Presentation (Enumeration)
      */
     private const RTY_PRESENTATION_VALANCE = [
         'PRESENTATION' => VARIABLE_PRESENTATION_ENUMERATION,
@@ -54,15 +68,9 @@ class SomfyRTS extends IPSModuleStrict
         'DISPLAY'      => 1,
     ];
 
-    /**
-     * @var string Prefix for Somfy RTS messages
-     */
-    private const RTY_PREFIX = "\x0C\x1A";
-
-    /**
-     * @var string Suffix for Somfy RTS messages
-     */
-    private const RTY_SUFFIX = "\x00\x00\x00\x00";
+    // -------------------------------------------------------------------------
+    // Methods
+    // -------------------------------------------------------------------------
 
     /**
      * In contrast to Construct, this function is called only once when creating the instance and starting IP-Symcon.
@@ -154,7 +162,7 @@ class SomfyRTS extends IPSModuleStrict
         // Setup infos
         $type = $this->ReadPropertyInteger('VisuType');
         $present = ($type == 0) ? self::RTY_PRESENTATION_AWNING : self::RTY_PRESENTATION_VALANCE;
-        $present = $this->TranslateCaptions($present);
+        $present = $this->TranslatePresentation($present, 'OPTIONS', 'Caption');
         $this->LogDebug(__FUNCTION__, $present);
 
         // Maintain variables

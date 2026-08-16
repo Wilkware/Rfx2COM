@@ -14,6 +14,10 @@
 
 declare(strict_types=1);
 
+/** @symcon-namespace */
+
+namespace Wilkware\Rfx2COM;
+
 /**
  * Helper class for formating and output json data.
  */
@@ -165,19 +169,27 @@ trait FormatHelper
      */
     private function GetBase64Image(int $media): string
     {
-        $data = '';
-        if (IPS_MediaExists($media)) {
-            $image = IPS_GetMedia($media);
-            if ($image['MediaType'] === MEDIATYPE_IMAGE) {
-                $file = explode('.', $image['MediaFile']);
-                $data = $this->GetMediaType(end($file));
-                // Only continue if content has been set. Otherwise, the image is not a supported file type.
-                if ($data) {
-                    // Append base64-encoded content of the image
-                    $data .= IPS_GetMediaContent($media);
-                }
-            }
+        if (!IPS_MediaExists($media)) {
+            return '';
         }
-        return $data;
+        $image = IPS_GetMedia($media);
+        if ($image['MediaType'] !== MEDIATYPE_IMAGE) {
+            return '';
+        }
+
+        $file = explode('.', $image['MediaFile']);
+        $mime = $this->GetMediaType(end($file));
+        // Unsupported file type
+        if (!$mime) {
+            return '';
+        }
+
+        $content = @IPS_GetMediaContent($media);
+        // Could not read media content
+        if ($content === false || $content === '') {
+            return '';
+        }
+
+        return $mime . $content;
     }
 }
