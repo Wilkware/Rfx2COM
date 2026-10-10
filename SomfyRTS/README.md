@@ -1,5 +1,6 @@
 # SomfyRTS
 
+[![Home](https://img.shields.io/badge/Home-wilkware.de-0b1830.svg?style=flat-square)](https://wilkware.de/module/rfx2com/somfy-rts/)
 [![Version](https://img.shields.io/badge/Symcon-PHP--Modul-red.svg?style=flat-square)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 [![Product](https://img.shields.io/badge/Symcon%20Version-8.1-blue.svg?style=flat-square)](https://www.symcon.de/produkt/)
 [![Version](https://img.shields.io/badge/Modul%20Version-2.0.20260201-orange.svg?style=flat-square)](https://github.com/Wilkware/Rfx2COM)
@@ -13,11 +14,12 @@ Mit diesem Modul können Somfy RTS- sowie ASA-Motoren über einen RFXtrx433E, RF
 1. [Funktionsumfang](#user-content-1-funktionsumfang)
 2. [Voraussetzungen](#user-content-2-voraussetzungen)
 3. [Installation](#user-content-3-installation)
-4. [Einrichten der Instanzen in IP-Symcon](#user-content-4-einrichten-der-instanzen-in-ip-symcon)
-5. [Statusvariablen und Profile](#user-content-5-statusvariablen-und-profile)
-6. [Visualisierung](#user-content-6-visualisierung)
-7. [PHP-Befehlsreferenz](#user-content-7-php-befehlsreferenz)
-8. [Versionshistorie](#user-content-8-versionshistorie)
+4. [Einrichtung](#user-content-4-einrichtung)
+5. [Statusvariablen](#user-content-5-statusvariablen)
+6. [Darstellungen](#user-content-6-darstellungen)
+7. [Visualisierung](#user-content-7-visualisierung)
+8. [Befehlsreferenz](#user-content-8-befehlsreferenz)
+9. [Versionshistorie](#user-content-9-versionshistorie)
 
 ### 1. Funktionsumfang
 
@@ -32,23 +34,23 @@ Was macht bzw. was kann das Modul?
 
 ### 2. Voraussetzungen
 
-* IP-Symcon ab Version 8.1
+* Symcon ab Version 8.1
 
 ### 3. Installation
 
 * Über den Modul Store die Bibliothek _Rfx2COM_ installieren.
-* Alternativ Über das Modul-Control folgende URL hinzufügen.  
+* Alternativ über das Modul Control folgende URL hinzufügen.  
 `https://github.com/Wilkware/Rfx2COM` oder `git://github.com/Wilkware/Rfx2COM.git`
 
-### 4. Einrichten der Instanzen in IP-Symcon
+### 4. Einrichtung
 
-* Unter "Instanz hinzufügen" ist das _'SomfyRTS'_-Modul unter dem Hersteller _'RFXCOM'_ aufgeführt.
+* Unter 'Instanz hinzufügen' ist das _SomfyRTS_-Modul unter dem Hersteller 'RFXCOM' aufgeführt.
 
 __Konfigurationsseite__:
 
 Einstellungsbereich:
 
-> Empfangseinheit …
+> 📡 Empfangseinheit ...
 
 Name                        | Beschreibung
 --------------------------- | ----------------------------------
@@ -56,7 +58,7 @@ Typ                         | Somfy (Sub)typ [Somfy RTS(RFY) oder ASA]
 Geräte-ID                   | Unit ID (000001 bis FFFFFF)
 Gerätecode                  | Unit Code (00 bis FF)
 
-> Visualisierung …
+> ✨ Visualisierung ...
 
 Name                                   | Beschreibung
 -------------------------------------- | ----------------------------------
@@ -74,25 +76,33 @@ MY/STOP        | Startet das Ausfahren auf vorprogrammierte Position bzw. stoppt
 HOCH/REIN      | Startet das Einfahren der Markise bzw. Volants
 RUNTER/RAUS    | Startet das Ausfahren der Markise bzw. Volants
 
-### 5. Statusvariablen und Profile
+### 5. Statusvariablen
 
 Die Statusvariablen werden automatisch angelegt. Das Löschen einzelner kann zu Fehlfunktionen führen.
 
-Name                        | Typ       | Beschreibung
---------------------------- | --------- | ----------------
-Fernbedienung               | Integer   | Kommando das (zuletzt) gesendet wurde bzw. gesendet werden soll.
+Name                 | Typ     | Beschreibung
+-------------------- | ------- | ------------------------------
+Fernbedienung        | Integer | Kommando das (zuletzt) gesendet wurde bzw. gesendet werden soll.
 
-### 6. Visualisierung
+### 6. Darstellungen
+
+Die Darstellungen werden direkt an den Statusvariablen hinterlegt, es werden keine Profile angelegt.
+
+Variable             | Darstellung   | Werte
+-------------------- | ------------- | ------------------------------
+Fernbedienung        | Aufzählung    | My/Stop, Rein, Raus (Markise) bzw. My/Stop, Hoch, Runter (Volant)
+
+### 7. Visualisierung
 
 Man kann direkt das Modul in die Tile Visu verlinken. Die Darstellung der dadurch entstehenden Kachel kann über die  
 Konfiguration der Visualisierung gesteuert werden.  
 Man könnte aber auch nur die Statusvariablen in die Visualisierung verlinken.
 
-### 7. PHP-Befehlsreferenz
+### 8. Befehlsreferenz
 
 Das Modul stellt keine direkten Funktionsaufrufe zur Verfügung.
 
-### 8. Versionshistorie
+### 9. Versionshistorie
 
 v2.0.20260201
 
@@ -111,7 +121,7 @@ v1.0.20250518
 
 ## Entwickler
 
-Seit nunmehr über 10 Jahren fasziniert mich das Thema Haussteuerung. In den letzten Jahren betätige ich mich auch intensiv in der IP-Symcon Community und steuere dort verschiedenste Skript und Module bei. Ihr findet mich dort unter dem Namen @pitti ;-)
+Seit nunmehr über 10 Jahren fasziniert mich das Thema Haussteuerung. In den letzten Jahren betätige ich mich auch intensiv in der Symcon Community und steuere dort verschiedenste Skript und Module bei. Ihr findet mich dort unter dem Namen @pitti ;-)
 
 [![GitHub](https://img.shields.io/badge/GitHub-@wilkware-181717.svg?style=for-the-badge&logo=github)](https://wilkware.github.io/)
 

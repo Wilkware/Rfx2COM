@@ -1,10 +1,11 @@
 # 🔘 Rfx2COM (Radio Frequency eXtension 2 COM-Port)
 
+[![Home](https://img.shields.io/badge/Home-wilkware.de-0b1830.svg?style=flat-square)](https://wilkware.de/module/rfx2com/)
 [![Version](https://img.shields.io/badge/Symcon-PHP--Bibliothek-purple.svg?style=flat-square)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 [![Product](https://img.shields.io/badge/Symcon%20Version-8.1-blue.svg?style=flat-square)](https://www.symcon.de/produkt/)
 [![Licence](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-Modulbibliothek für IP-Symcon zur Ansteuerung von 433 MHz-Funkgeräten über RFXCOM-Hardware (z. B. RFXtrx433XL).
+Modulbibliothek für Symcon zur Ansteuerung von 433 MHz-Funkgeräten über RFXCOM-Hardware (z. B. RFXtrx433XL).
 
 Folgende Module beinhaltet diese Bibliothek:
 
@@ -18,7 +19,7 @@ Modul welches ein Somfy RTS Motor steuert.
 
 ## 👨‍💻Entwickler
 
-Seit nunmehr über 10 Jahren fasziniert mich das Thema Haussteuerung. In den letzten Jahren betätige ich mich auch intensiv in der IP-Symcon Community und steuere dort verschiedenste Skript und Module bei. Ihr findet mich dort unter dem Namen @pitti ;-)
+Seit nunmehr über 10 Jahren fasziniert mich das Thema Haussteuerung. In den letzten Jahren betätige ich mich auch intensiv in der Symcon Community und steuere dort verschiedenste Skript und Module bei. Ihr findet mich dort unter dem Namen @pitti ;-)
 
 [![GitHub](https://img.shields.io/badge/GitHub-@wilkware-181717.svg?style=for-the-badge&logo=github)](https://wilkware.github.io/)
 
